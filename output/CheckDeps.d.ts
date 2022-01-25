@@ -4,4 +4,5 @@ declare class CheckDeps {
     private countDeps;
     private initedDeps;
     add(apiName: string, callback?: (api: any) => any): this;
+    launch(callback: (scope: any) => void): void;
 }

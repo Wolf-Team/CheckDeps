@@ -12,19 +12,27 @@ var CheckDeps = /** @class */ (function () {
         this.initedDeps = 0;
     }
     CheckDeps.prototype.add = function (apiName, callback) {
-        var _this = this;
         if (callback === void 0) { callback = function (api) { return api; }; }
         this.countDeps++;
-        this.deps[apiName] = false;
-        ModAPI.addAPICallback(apiName, function (api) {
-            _this.scope[apiName] = callback(api);
-            _this.deps[apiName] = true;
-            _this.initedDeps++;
-            if (_this.initedDeps == _this.countDeps) {
-                Launch(_this.scope);
-            }
-        });
+        this.deps[apiName] = { callback: callback, loaded: false };
         return this;
+    };
+    CheckDeps.prototype.launch = function (callback) {
+        var _this = this;
+        var _loop_1 = function (depsName) {
+            var deps = this_1.deps[depsName];
+            ModAPI.addAPICallback(depsName, function (api) {
+                _this.scope[depsName] = deps.callback(api);
+                deps.loaded = true;
+                _this.initedDeps++;
+                if (_this.initedDeps == _this.countDeps)
+                    callback(_this.scope);
+            });
+        };
+        var this_1 = this;
+        for (var depsName in this.deps) {
+            _loop_1(depsName);
+        }
     };
     return CheckDeps;
 }());
