@@ -14,5 +14,5 @@ new CheckDeps()
 		return api.something;
 	}) 
 	//Launch mod with builded scope
-	.launch(scope => Launch(scope));
+	.launch(function(scope){ Launch(scope); });
 ```
