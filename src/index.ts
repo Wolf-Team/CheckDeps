@@ -15,14 +15,20 @@ class CheckDeps {
 	} = {};
 	private countDeps = 0;
 	private initedDeps = 0;
+	private laucnhing = false;
 
 	public add(apiName: string, callback: (api: any) => any = (api) => api) {
+		if (this.laucnhing) {
+			return this;
+		}
 		this.countDeps++;
 		this.deps[apiName] = { callback, loaded: false };
 		return this;
 	}
 
 	public launch(callback: (scope: any) => void) {
+		if (this.laucnhing) return;
+		this.laucnhing = true;
 		for (const depsName in this.deps) {
 			const deps = this.deps[depsName];
 			ModAPI.addAPICallback(depsName, (api: any) => {
