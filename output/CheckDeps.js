@@ -1,7 +1,7 @@
 LIBRARY({
     name: "CheckDeps",
     version: 1,
-    api: "AdaptedScript",
+    api: "CoreEngine",
     shared: false
 });
 var CheckDeps = /** @class */ (function () {
