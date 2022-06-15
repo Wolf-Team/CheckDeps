@@ -45,3 +45,5 @@ new CheckDeps()
 	//Launch mod with builded scope
 	.launch(function(scope){ Launch(scope); });
 ```
+
+You can use `CheckDeps` without keyword `new`.

@@ -47,3 +47,5 @@ new CheckDeps()
 		Launch(scope);
 	});
 ```
+
+Вы можете использовать `CheckDeps` без ключевого слова `new`.
