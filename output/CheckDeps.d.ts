@@ -1,7 +1,6 @@
 declare type Dict<T = any> = {
     [key: string]: T;
 };
-declare function assignObject<S extends {}, T extends {}>(src: S, obj: T): S & T;
 interface DepsCallback {
     (api: any): any;
 }
@@ -33,7 +32,10 @@ declare class CheckDeps {
     private additiveDeps;
     private laucnhing;
     private configuration;
+    private dialog;
+    private ctx;
     constructor(cfg: Configuration);
+    private initDialog;
     add(apiName: string): this;
     add(apiName: string, callback: DepsCallback): this;
     add(apiName: string, options: DepsOptions): this;

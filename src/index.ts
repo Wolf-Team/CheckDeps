@@ -19,10 +19,6 @@ type Dict<T = any> = {
 	[key: string]: T;
 };
 
-function assignObject<S extends {}, T extends {}>(src: S, obj: T): S & T {
-	throw "";
-}
-
 interface DepsCallback {
 	(api: any): any;
 }
@@ -50,6 +46,10 @@ interface Configuration {
 	isClientOnly: boolean
 }
 
+Translation.addTranslation("Failed to start mod {name}.\nThe mod did not wait for the next API:", {
+	ru: "Не удалось запустить мод {name}.\nМод не дождался следующего API:",
+});
+
 class CheckDeps {
 	private scope: Dict = {};
 	private requiredDeps: DepsInfoDict = {};
@@ -59,12 +59,28 @@ class CheckDeps {
 	private additiveDeps: DepsInfoDict = {};
 	private laucnhing = false;
 	private configuration: Configuration;
+	private dialog: android.app.AlertDialog.Builder;
+	private ctx = UI.getContext();
 
 	constructor(cfg: Configuration) {
 		if (!(this instanceof CheckDeps)) return new CheckDeps(cfg);
 
 		this.configuration = cfg;
 		ConfigureMultiplayer(this.configuration);
+
+		this.initDialog();
+	}
+
+	private initDialog() {
+		let iconPath = __dir__ + 'mod_icon.png';
+		if (!FileTools.isExists(iconPath))
+			iconPath = __packdir__ + 'assets/res/drawable/innercore.png';
+
+		this.dialog = new android.app.AlertDialog.Builder(this.ctx)
+			.setTitle(this.configuration.name + " | CheckDeps")
+			.setIcon(android.graphics.drawable.Drawable.createFromPath(iconPath))
+			.setCancelable(false)
+			.setPositiveButton(Translation.translate("Ok"), new android.content.DialogInterface.OnClickListener({ onClick(dialog) { dialog.dismiss(); } }));
 	}
 
 	public add(apiName: string): this;
@@ -133,9 +149,20 @@ class CheckDeps {
 				callback(this.scope)
 			}
 		});
+
+		Callback.addCallback("PostLoaded", () => {
+			let msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", this.configuration.name);
+
+			for (const depsName in this.requiredDeps)
+				if (!this.requiredDeps[depsName].loaded)
+					msg += "\n• " + depsName;
+
+			this.dialog.setMessage(msg);
+			this.ctx.runOnUiThread(new java.lang.Runnable({ run: () => { this.dialog.show() } }));
+
+			delete this.dialog;
+		})
 	}
 }
-
-
 
 EXPORT("CheckDeps", CheckDeps);
