@@ -1,5 +1,9 @@
 # CheckDeps
 
+## !!!WARNING!!!
+**You should not use "ConfigureMultiplayer" because CheckDeps calls it on its own.**
+  
+
 ## Usage
 
 Write in your launch-file
