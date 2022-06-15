@@ -2,21 +2,13 @@
 
 [en](README.md) | **ru**
 
-## !!!WARNING!!!
-**Вы не должны использовать "ConfigureMultiplayer", потому что CheckDeps использует его самостоятельно.**
-  
-
 ## Usage
 
 Напишите в вашем launch-файле
 ```js
 IMPORT("CheckDeps");
 
-new CheckDeps({
-	name: "MyMode",
-	version: "1.0.0",
-	isClientOnly: false
-})
+new CheckDeps()
 	//Весь API будет доступен под именем API.
 	.add("name_api") 
 	// Добавить зависимость с настраиваемым обратным вызовом. Возвращаемое значение обратного вызова будет доступно под именем API.

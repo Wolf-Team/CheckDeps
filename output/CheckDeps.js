@@ -17,7 +17,7 @@ Translation.addTranslation("Failed to start mod {name}.\nThe mod did not wait fo
     ru: "Не удалось запустить мод {name}.\nМод не дождался следующего API:",
 });
 var CheckDeps = /** @class */ (function () {
-    function CheckDeps(cfg) {
+    function CheckDeps() {
         this.scope = {};
         this.requiredDeps = {};
         this.countDeps = 0;
@@ -26,9 +26,7 @@ var CheckDeps = /** @class */ (function () {
         this.laucnhing = false;
         this.ctx = UI.getContext();
         if (!(this instanceof CheckDeps))
-            return new CheckDeps(cfg);
-        this.configuration = cfg;
-        ConfigureMultiplayer(this.configuration);
+            return new CheckDeps();
         this.initDialog();
     }
     CheckDeps.prototype.initDialog = function () {
@@ -36,7 +34,7 @@ var CheckDeps = /** @class */ (function () {
         if (!FileTools.isExists(iconPath))
             iconPath = __packdir__ + 'assets/res/drawable/innercore.png';
         this.dialog = new android.app.AlertDialog.Builder(this.ctx)
-            .setTitle(this.configuration.name + " | CheckDeps")
+            .setTitle(__name__ + " | CheckDeps")
             .setIcon(android.graphics.drawable.Drawable.createFromPath(iconPath))
             .setCancelable(false)
             .setPositiveButton(Translation.translate("Ok"), new android.content.DialogInterface.OnClickListener({ onClick: function (dialog) { dialog.dismiss(); } }));
@@ -111,7 +109,7 @@ var CheckDeps = /** @class */ (function () {
             }
         });
         Callback.addCallback("PostLoaded", function () {
-            var msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", _this.configuration.name);
+            var msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", __name__);
             for (var depsName in _this.requiredDeps)
                 if (!_this.requiredDeps[depsName].loaded)
                     msg += "\n• " + depsName;

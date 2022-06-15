@@ -40,15 +40,11 @@ interface LaunchScope {
 	(scope: any): void;
 }
 
-interface Configuration {
-	name: string,
-	version: string,
-	isClientOnly: boolean
-}
-
 Translation.addTranslation("Failed to start mod {name}.\nThe mod did not wait for the next API:", {
 	ru: "Не удалось запустить мод {name}.\nМод не дождался следующего API:",
 });
+
+
 
 class CheckDeps {
 	private scope: Dict = {};
@@ -58,15 +54,11 @@ class CheckDeps {
 
 	private additiveDeps: DepsInfoDict = {};
 	private laucnhing = false;
-	private configuration: Configuration;
 	private dialog: android.app.AlertDialog.Builder;
 	private ctx = UI.getContext();
 
-	constructor(cfg: Configuration) {
-		if (!(this instanceof CheckDeps)) return new CheckDeps(cfg);
-
-		this.configuration = cfg;
-		ConfigureMultiplayer(this.configuration);
+	constructor() {
+		if (!(this instanceof CheckDeps)) return new CheckDeps();
 
 		this.initDialog();
 	}
@@ -77,7 +69,7 @@ class CheckDeps {
 			iconPath = __packdir__ + 'assets/res/drawable/innercore.png';
 
 		this.dialog = new android.app.AlertDialog.Builder(this.ctx)
-			.setTitle(this.configuration.name + " | CheckDeps")
+			.setTitle(__name__ + " | CheckDeps")
 			.setIcon(android.graphics.drawable.Drawable.createFromPath(iconPath))
 			.setCancelable(false)
 			.setPositiveButton(Translation.translate("Ok"), new android.content.DialogInterface.OnClickListener({ onClick(dialog) { dialog.dismiss(); } }));
@@ -151,7 +143,7 @@ class CheckDeps {
 		});
 
 		Callback.addCallback("PostLoaded", () => {
-			let msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", this.configuration.name);
+			let msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", __name__);
 
 			for (const depsName in this.requiredDeps)
 				if (!this.requiredDeps[depsName].loaded)

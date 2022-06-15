@@ -2,21 +2,13 @@
 
 **en** | [ru](README.RU.md)
 
-## !!!WARNING!!!
-**You should not use "ConfigureMultiplayer" because CheckDeps calls it on its own.**
-  
-
 ## Usage
 
 Write in your launch-file
 ```js
 IMPORT("CheckDeps");
 
-new CheckDeps({
-	name: "MyMode",
-	version: "1.0.0",
-	isClientOnly: false
-})
+new CheckDeps()
 	//The entire API will be available under the API name.
 	.add("name_api") 
 	// Add a dependency with a custom callback. The return value of the callback will be available under the API name.

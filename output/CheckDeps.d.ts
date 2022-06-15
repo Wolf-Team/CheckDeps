@@ -19,11 +19,6 @@ declare type DepsInfoDict = Dict<DepsInfo>;
 interface LaunchScope {
     (scope: any): void;
 }
-interface Configuration {
-    name: string;
-    version: string;
-    isClientOnly: boolean;
-}
 declare class CheckDeps {
     private scope;
     private requiredDeps;
@@ -31,10 +26,9 @@ declare class CheckDeps {
     private initedDeps;
     private additiveDeps;
     private laucnhing;
-    private configuration;
     private dialog;
     private ctx;
-    constructor(cfg: Configuration);
+    constructor();
     private initDialog;
     add(apiName: string): this;
     add(apiName: string, callback: DepsCallback): this;
