@@ -1,5 +1,7 @@
 # CheckDeps
 
+**en** | [ru](README.RU.md)
+
 ## !!!WARNING!!!
 **You should not use "ConfigureMultiplayer" because CheckDeps calls it on its own.**
   
