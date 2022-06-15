@@ -9,7 +9,7 @@
 */
 LIBRARY({
     name: "CheckDeps",
-    version: 1,
+    version: 2,
     api: "CoreEngine",
     shared: false
 });
