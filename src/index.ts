@@ -14,6 +14,7 @@ LIBRARY({
 	shared: false
 });
 
+
 type Dict<T = any> = {
 	[key: string]: T;
 };
@@ -43,6 +44,11 @@ interface LaunchScope {
 	(scope: any): void;
 }
 
+interface Configuration {
+	name: string,
+	version: string,
+	isClientOnly: boolean
+}
 
 class CheckDeps {
 	private scope: Dict = {};
@@ -52,6 +58,14 @@ class CheckDeps {
 
 	private additiveDeps: DepsInfoDict = {};
 	private laucnhing = false;
+	private configuration: Configuration;
+
+	constructor(cfg: Configuration) {
+		if (!(this instanceof CheckDeps)) return new CheckDeps(cfg);
+
+		this.configuration = cfg;
+		ConfigureMultiplayer(this.configuration);
+	}
 
 	public add(apiName: string): this;
 	public add(apiName: string, callback: DepsCallback): this;
@@ -121,5 +135,7 @@ class CheckDeps {
 		});
 	}
 }
+
+
 
 EXPORT("CheckDeps", CheckDeps);
