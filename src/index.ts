@@ -112,16 +112,6 @@ class CheckDeps {
 			});
 		}
 
-		for (const depsName in this.requiredDeps) {
-			const deps = this.requiredDeps[depsName];
-			ModAPI.addAPICallback(depsName, (api: any) => {
-				this.scope[depsName] = deps.callback(api);
-				deps.loaded = true;
-
-				this.initedDeps++;
-			});
-		}
-
 		for (const depsName in this.additiveDeps) {
 			const deps = this.additiveDeps[depsName];
 			ModAPI.addAPICallback(depsName, (api: any) => {
@@ -143,6 +133,10 @@ class CheckDeps {
 		});
 
 		Callback.addCallback("PostLoaded", () => {
+			if (this.initedDeps == this.countDeps) {
+				delete this.dialog;
+				return;
+			}
 			let msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", __name__);
 
 			for (const depsName in this.requiredDeps)
@@ -150,9 +144,13 @@ class CheckDeps {
 					msg += "\n• " + depsName;
 
 			this.dialog.setMessage(msg);
-			this.ctx.runOnUiThread(new java.lang.Runnable({ run: () => { this.dialog.show() } }));
+			this.ctx.runOnUiThread(new java.lang.Runnable({
+				run: () => {
+					this.dialog.show();
+					delete this.dialog;
+				}
+			}));
 
-			delete this.dialog;
 		})
 	}
 }

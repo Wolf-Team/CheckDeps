@@ -75,27 +75,15 @@ var CheckDeps = /** @class */ (function () {
             _loop_1(depsName);
         }
         var _loop_2 = function (depsName) {
-            var deps = this_2.requiredDeps[depsName];
+            var deps = this_2.additiveDeps[depsName];
             ModAPI.addAPICallback(depsName, function (api) {
                 _this.scope[depsName] = deps.callback(api);
                 deps.loaded = true;
-                _this.initedDeps++;
             });
         };
         var this_2 = this;
-        for (var depsName in this.requiredDeps) {
-            _loop_2(depsName);
-        }
-        var _loop_3 = function (depsName) {
-            var deps = this_3.additiveDeps[depsName];
-            ModAPI.addAPICallback(depsName, function (api) {
-                _this.scope[depsName] = deps.callback(api);
-                deps.loaded = true;
-            });
-        };
-        var this_3 = this;
         for (var depsName in this.additiveDeps) {
-            _loop_3(depsName);
+            _loop_2(depsName);
         }
         Callback.addCallback("ModsLoaded", function () {
             if (_this.initedDeps == _this.countDeps) {
@@ -109,13 +97,21 @@ var CheckDeps = /** @class */ (function () {
             }
         });
         Callback.addCallback("PostLoaded", function () {
+            if (_this.initedDeps == _this.countDeps) {
+                delete _this.dialog;
+                return;
+            }
             var msg = Translation.translate("Failed to start mod {name}.\nThe mod did not wait for the next API:").replace("{name}", __name__);
             for (var depsName in _this.requiredDeps)
                 if (!_this.requiredDeps[depsName].loaded)
                     msg += "\n• " + depsName;
             _this.dialog.setMessage(msg);
-            _this.ctx.runOnUiThread(new java.lang.Runnable({ run: function () { _this.dialog.show(); } }));
-            delete _this.dialog;
+            _this.ctx.runOnUiThread(new java.lang.Runnable({
+                run: function () {
+                    _this.dialog.show();
+                    delete _this.dialog;
+                }
+            }));
         });
     };
     return CheckDeps;
