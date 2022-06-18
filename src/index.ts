@@ -43,8 +43,9 @@ interface LaunchScope {
 Translation.addTranslation("Failed to start mod {name}.\nThe mod did not wait for the next API:", {
 	ru: "Не удалось запустить мод {name}.\nМод не дождался следующего API:",
 });
-
-
+Translation.addTranslation("More", {
+	ru: "Подробнее",
+});
 
 class CheckDeps {
 	private scope: Dict = {};
@@ -56,11 +57,19 @@ class CheckDeps {
 	private laucnhing = false;
 	private dialog: android.app.AlertDialog.Builder;
 	private ctx = UI.getContext();
+	private url?: string;
 
-	constructor() {
-		if (!(this instanceof CheckDeps)) return new CheckDeps();
+	constructor(urlToMore?: string) {
+		if (!(this instanceof CheckDeps)) return new CheckDeps(urlToMore);
 
+		this.initURL(urlToMore);
 		this.initDialog();
+	}
+
+	private initURL(url: string) {
+		if (url.indexOf("http") == -1)
+			url = "http://" + url;
+		this.url = url;
 	}
 
 	private initDialog() {
@@ -73,6 +82,13 @@ class CheckDeps {
 			.setIcon(android.graphics.drawable.Drawable.createFromPath(iconPath))
 			.setCancelable(false)
 			.setPositiveButton(Translation.translate("Ok"), new android.content.DialogInterface.OnClickListener({ onClick(dialog) { dialog.dismiss(); } }));
+		const Intent = android.content.Intent;
+		if (this.url)
+			this.dialog.setNegativeButton(Translation.translate("More"), new android.content.DialogInterface.OnClickListener({
+				onClick: () => {
+					this.ctx.startActivity(new Intent(Intent.ACTION_VIEW, android.net.Uri.parse(this.url)))
+				}
+			}));
 	}
 
 	public add(apiName: string): this;
