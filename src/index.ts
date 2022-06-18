@@ -67,6 +67,7 @@ class CheckDeps {
 	}
 
 	private initURL(url: string) {
+		if (!url) return;
 		if (url.indexOf("http") == -1)
 			url = "http://" + url;
 		this.url = url;
