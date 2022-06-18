@@ -49,3 +49,8 @@ new CheckDeps()
 ```
 
 Вы можете использовать `CheckDeps` без ключевого слова `new`.
+Вы можете передать в конструктор CheckDeps URL-адрес на страницу с информацией о зависимостях
+```js
+CheckDeps("https://github.com/Wolf-Team/CheckDeps")
+	.launch(function(scope){ Launch(scope); });
+```

@@ -47,3 +47,8 @@ new CheckDeps()
 ```
 
 You can use `CheckDeps` without keyword `new`.
+You can pass the URL to the dependency information page to the `CheckDeps` constructor.
+```js
+CheckDeps("https://github.com/Wolf-Team/CheckDeps")
+	.launch(function(scope){ Launch(scope); });
+```
